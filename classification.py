@@ -6,19 +6,17 @@ from data_generator import Data
 tf.set_random_seed(1)
 np.random.seed(1)
 
-REGULARIZED = 0
-IMAGE = 1
-SIGNAL = 2
-
 # Introduce data
 X = None
 Y = None
 
 # Feed in data
 data = Data()
-data.random_normal(20)
+data.random_normal(20, 2)
 X = data.X
 Y = data.Y
+print(X)
+print(Y)
 
 # Plot data
 plt.scatter(X[:, 0], X[:, 1], c=Y, s=20, cmap='RdYlGn')
@@ -29,21 +27,8 @@ tf_x = tf.placeholder(tf.float32, X.shape)
 tf_y = tf.placeholder(tf.int32, Y.shape)
 
 # Create neural network layers
-mode = REGULARIZED
-
-if mode == REGULARIZED:
-    l1 = tf.layers.dense(tf_x, 5, tf.nn.relu)
-    output = tf.layers.dense(l1, 2)
-elif mode == IMAGE:
-    l1 = tf.layers.dense(tf_x, 5, tf.nn.relu)
-    output = tf.layers.dense(l1, 2)
-elif mode == SIGNAL:
-    l1 = tf.layers.dense(tf_x, 5, tf.nn.relu)
-    output = tf.layers.dense(l1, 2)
-else:
-    # defualt
-    l1 = tf.layers.dense(tf_x, 5, tf.nn.relu)
-    output = tf.layers.dense(l1, 2)
+l1 = tf.layers.dense(tf_x, 5, tf.nn.relu)
+output = tf.layers.dense(l1, 2)
 
 # Compute cost
 loss = tf.losses.sparse_softmax_cross_entropy(labels=tf_y, logits=output)
