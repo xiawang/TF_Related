@@ -6,38 +6,57 @@ from data_generator import Data
 tf.set_random_seed(1)
 np.random.seed(1)
 
-# Feed in data
+REGULARIZED = 0
+IMAGE = 1
+SIGNAL = 2
+
+# Introduce data
 X = None
 Y = None
 
-# experiment data
+# Feed in data
 data = Data()
 data.random_normal(20)
 X = data.X
 Y = data.Y
 
-# plot data
+# Plot data
 plt.scatter(X[:, 0], X[:, 1], c=Y, s=20, cmap='RdYlGn')
 plt.show()
 
+# Create placeholders
 tf_x = tf.placeholder(tf.float32, X.shape)
 tf_y = tf.placeholder(tf.int32, Y.shape)
 
-# neural network layers
-l1 = tf.layers.dense(tf_x, 5, tf.nn.relu)
-output = tf.layers.dense(l1, 2)
+# Create neural network layers
+mode = REGULARIZED
 
-# compute cost
+if mode == REGULARIZED:
+    l1 = tf.layers.dense(tf_x, 5, tf.nn.relu)
+    output = tf.layers.dense(l1, 2)
+elif mode == IMAGE:
+    l1 = tf.layers.dense(tf_x, 5, tf.nn.relu)
+    output = tf.layers.dense(l1, 2)
+elif mode == SIGNAL:
+    l1 = tf.layers.dense(tf_x, 5, tf.nn.relu)
+    output = tf.layers.dense(l1, 2)
+else:
+    # defualt
+    l1 = tf.layers.dense(tf_x, 5, tf.nn.relu)
+    output = tf.layers.dense(l1, 2)
+
+# Compute cost
 loss = tf.losses.sparse_softmax_cross_entropy(labels=tf_y, logits=output)
 accuracy = tf.metrics.accuracy(labels=tf.squeeze(tf_y), predictions=tf.argmax(output, axis=1),)[1]
 optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.05)
 train_op = optimizer.minimize(loss)
 
-# initialization
+# Initialize TF session
 sess = tf.Session()
 init_op = tf.group(tf.global_variables_initializer(), tf.local_variables_initializer())
 sess.run(init_op)
 
+# Start training
 plt.ion()
 plt.show()
 for step in range(100):
