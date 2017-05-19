@@ -1,6 +1,7 @@
 import tensorflow as tf
 import matplotlib.pyplot as plt
 import numpy as np
+from data_generator import Data
 
 tf.set_random_seed(1)
 np.random.seed(1)
@@ -10,16 +11,10 @@ X = None
 Y = None
 
 # experiment data
-n_data = np.ones((20, 2))
-x0 = np.random.normal(2*n_data, 1)
-y0 = np.zeros(20)
-x1 = np.random.normal(-2*n_data, 1)
-y1 = np.ones(20)
-X = np.vstack((x0, x1))
-Y = np.hstack((y0, y1))
-
-print(type(X))
-print(X)
+data = Data()
+data.random_normal(20)
+X = data.X
+Y = data.Y
 
 # plot data
 plt.scatter(X[:, 0], X[:, 1], c=Y, s=20, cmap='RdYlGn')
@@ -38,6 +33,7 @@ accuracy = tf.metrics.accuracy(labels=tf.squeeze(tf_y), predictions=tf.argmax(ou
 optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.05)
 train_op = optimizer.minimize(loss)
 
+# initialization
 sess = tf.Session()
 init_op = tf.group(tf.global_variables_initializer(), tf.local_variables_initializer())
 sess.run(init_op)
