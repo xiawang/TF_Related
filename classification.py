@@ -5,6 +5,7 @@ from data_generator import Data
 
 tf.set_random_seed(1)
 np.random.seed(1)
+nSteps=200
 
 # Introduce data
 X = None
@@ -44,7 +45,8 @@ sess.run(init_op)
 # Start training
 plt.ion()
 plt.show()
-for step in range(100):
+
+for step in range(nSteps):
     # train and net output
     _, acc, pred = sess.run([train_op, accuracy, output], {tf_x: X, tf_y: Y})
 
