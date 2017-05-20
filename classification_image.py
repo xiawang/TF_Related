@@ -86,7 +86,7 @@ threads = tf.train.start_queue_runners(sess=sess,coord=coord)
 
 for i in range(nSteps):
 	batch_xs, batch_ys = sess.run([imageBatch, labelBatch])
-	train_step.run(feed_dict={x: batch_xs, y_: batch_ys, keep_prob: 0.5})
+	train_op.run(feed_dict={x: batch_xs, y_: batch_ys, keep_prob: 0.5})
 
 	# Do validation every 5 steps
 	if (i+1)%5 == 0:
