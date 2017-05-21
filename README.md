@@ -36,7 +36,8 @@ Watermelon
 ```
 
 (A visualization of the directory structure)
-![Directory Structure](https://github.com/xiawang/TF_Related/tree/master/img)
+
+![Directory Structure](https://github.com/xiawang/TF_Related/blob/master/img/01.png)
 
 **Step5**
 In the `data` directory, execute the following command:
