@@ -7,7 +7,7 @@ Currently, two examples are provided for general classification problem.
 
 [**classification_image.py**](https://github.com/xiawang/TF_Related/blob/master/classification_image.py) shows a more comlicated example for a training pipeline that deals with image classification. The data used in this example is generated via [**build_image_data.py**](https://github.com/tensorflow/models/blob/master/inception/inception/data/build_image_data.py), and the program is directly handling converted **TFRecord** files. (The detail of converting directory of images to **TFRecord** format is illustrated below.)
 
-Note that in both examples, labels are created using one-hot encoding.
+Note that in both examples, labels are created using **one-hot** encoding.
 
 ### RNN & LSTM
 (To be completed...)

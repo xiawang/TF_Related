@@ -49,7 +49,7 @@ plt.show()
 
 for step in range(nSteps):
     # train and net output
-    _, acc, pred = sess.run([train_op, accuracy, output], {tf_x: X, tf_y: Y})
+    _, acc, pred = sess.run([train_op, accuracy, output], feed_dict={tf_x: X, tf_y: Y})
 
     if step % 2 == 0:
         plt.cla()
