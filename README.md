@@ -6,6 +6,10 @@
 
 ### GAN & Conditional GAN
 
+### Data Handling
+#### TFRecord (handling images)
+#### CSV
+
 ### Prerequisite
 
 ```
