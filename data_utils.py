@@ -1,7 +1,8 @@
+import tensorflow as tf
 import matplotlib.pyplot as plt
 import numpy as np
 
-def getImage(filename):
+def getImage(filename, height, width, nClass, grayscale=True):
     filenameQ = tf.train.string_input_producer([filename],num_epochs=None)
     recordReader = tf.TFRecordReader()
     key, fullExample = recordReader.read(filenameQ)
@@ -27,7 +28,11 @@ def getImage(filename):
         image = tf.image.decode_jpeg(image_buffer, channels=3)
         image = tf.image.convert_image_dtype(image, dtype=tf.float32)
 
-    image=tf.reshape(1-tf.image.rgb_to_grayscale(image),[height*width])
+    if grayscale:
+        image=tf.reshape(1-tf.image.rgb_to_grayscale(image),[height*width])
+    else:
+        image=tf.reshape(image,[height*width*3])
+
     label=tf.stack(tf.one_hot(label-1, nClass))
 
     return label, image

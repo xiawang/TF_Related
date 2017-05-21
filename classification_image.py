@@ -13,8 +13,8 @@ nFeatures2=32
 nNeuronsfc=1024
 
 # Read in data
-label, image = getImage("data/train-00000-of-00001")
-vlabel, vimage = getImage("data/validation-00000-of-00001")
+label, image = getImage("data/train-00000-of-00001", height, width, nClass, grayscale=False)
+vlabel, vimage = getImage("data/validation-00000-of-00001", height, width, nClass, grayscale=False)
 
 # Shuffle the data for batch processing
 imageBatch, labelBatch = tf.train.shuffle_batch(
@@ -30,13 +30,14 @@ vimageBatch, vlabelBatch = tf.train.shuffle_batch(
     min_after_dequeue=1000)
 
 # Create placeholders
-x = tf.placeholder(tf.float32, [None, width*height])
+sess = tf.InteractiveSession()
+x = tf.placeholder(tf.float32, [None, width*height*3])
 y_ = tf.placeholder(tf.float32, [None, nClass])
-x_image = tf.reshape(x, [-1,width,height,1])
+x_image = tf.reshape(x, [-1,width,height,3])
 
 # Create CNN layers
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-W_conv1 = weight_variable([5, 5, 1, nFeatures1])
+W_conv1 = weight_variable([5, 5, 3, nFeatures1])
 b_conv1 = bias_variable([nFeatures1])
 
 h_conv1 = tf.nn.relu(conv2d(x_image, W_conv1) + b_conv1)
@@ -76,14 +77,13 @@ optimizer = tf.train.AdamOptimizer(1e-4)
 train_op = optimizer.minimize(loss)
 
 # Initialize TF session
-sess = tf.Session()
 init_op = tf.group(tf.global_variables_initializer(), tf.local_variables_initializer())
 sess.run(init_op)
 
 # Start training
 coord = tf.train.Coordinator()
 threads = tf.train.start_queue_runners(sess=sess,coord=coord)
-
+print(image.eval())
 for i in range(nSteps):
 	batch_xs, batch_ys = sess.run([imageBatch, labelBatch])
 	train_op.run(feed_dict={x: batch_xs, y_: batch_ys, keep_prob: 0.5})
