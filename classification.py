@@ -13,14 +13,14 @@ Y = None
 
 # Feed in data
 data = Data()
-data.random_normal(20, 2)
+data.random_normal(20, 2, one_hot=True)
 X = data.X
 Y = data.Y
 print(X)
 print(Y)
 
 # Plot data
-plt.scatter(X[:, 0], X[:, 1], c=Y, s=20, cmap='RdYlGn')
+plt.scatter(X[:, 0], X[:, 1], c=[x.argmax(0) for x in Y], s=20, cmap='RdYlGn')
 plt.show()
 
 # Create placeholders
@@ -32,8 +32,9 @@ l1 = tf.layers.dense(tf_x, 5, tf.nn.relu)
 output = tf.layers.dense(l1, 2)
 
 # Compute cost
-loss = tf.losses.sparse_softmax_cross_entropy(labels=tf_y, logits=output)
-accuracy = tf.metrics.accuracy(labels=tf.squeeze(tf_y), predictions=tf.argmax(output, axis=1),)[1]
+loss = tf.losses.softmax_cross_entropy(onehot_labels=tf_y, logits=output)
+prediction = tf.equal(tf.argmax(tf_y,1), tf.argmax(output,1))
+accuracy = tf.reduce_mean(tf.cast(prediction, tf.float32))
 optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.05)
 train_op = optimizer.minimize(loss)
 

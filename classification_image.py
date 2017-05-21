@@ -83,16 +83,18 @@ sess.run(init_op)
 # Start training
 coord = tf.train.Coordinator()
 threads = tf.train.start_queue_runners(sess=sess,coord=coord)
-print(image.eval())
-for i in range(nSteps):
-	batch_xs, batch_ys = sess.run([imageBatch, labelBatch])
-	train_op.run(feed_dict={x: batch_xs, y_: batch_ys, keep_prob: 0.5})
 
-	# Do validation every 5 steps
-	if (i+1)%5 == 0:
-		vbatch_xs, vbatch_ys = sess.run([vimageBatch, vlabelBatch])
-		train_accuracy = accuracy.eval(feed_dict={x:vbatch_xs, y_: vbatch_ys, keep_prob: 1.0})
-		print("step %d, training accuracy %g"%(i+1, train_accuracy))
+for i in range(nSteps):
+    batch_xs, batch_ys = sess.run([imageBatch, labelBatch])
+    cur_prediction = prediction.eval(feed_dict={x:batch_xs, y_: batch_ys, keep_prob: 1.0})
+    print(batch_ys.shape)
+    train_op.run(feed_dict={x: batch_xs, y_: batch_ys, keep_prob: 0.5})
+
+    # Do validation every 5 steps
+    if (i+1)%5 == 0:
+        vbatch_xs, vbatch_ys = sess.run([vimageBatch, vlabelBatch])
+        train_accuracy = accuracy.eval(feed_dict={x:vbatch_xs, y_: vbatch_ys, keep_prob: 1.0})
+        print("step %d, training accuracy %g"%(i+1, train_accuracy))
 
 # Stop training 
 coord.request_stop()
