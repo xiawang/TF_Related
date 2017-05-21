@@ -47,7 +47,7 @@ python build_image_data.py --train_directory=./train --output_directory=./  \
 --train_shards=1 --validation_shards=1 --num_threads=1
 ```
 
-Two TFRecord files for training and validating will be created: `train-00000-of-00001` and `validation-00000-of-00001`. The functionf for reading in these two files is shown in the file **data_utils.py**.
+Two TFRecord files for training and validating will be created: `train-00000-of-00001` and `validation-00000-of-00001`. The function for reading in these two files is shown in the file [**data_utils.py**](https://github.com/xiawang/TF_Related/blob/master/data_utils.py). The batching, training and validating process are shown in the file [**classification_image.py**](https://github.com/xiawang/TF_Related/blob/master/classification_image.py).
 
 #### CSV
 
