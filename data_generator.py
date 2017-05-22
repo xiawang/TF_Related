@@ -5,6 +5,7 @@ class Data:
     def __init__(self):
         self.X = None
         self.Y = None
+        self.dist_batches = None
 
     def random_normal(self, size, distance, one_hot=False):
         """ Generate two groups of data points from two Gaussian distributions.
@@ -43,3 +44,20 @@ class Data:
             self.Y = np.vstack((y_0, y_1))
         else:
             self.Y = np.hstack((y_0, y_1))
+
+    def parabola_distribution(self, batch, simulate_points):
+        """ Generate batches of points that are from a parabola. Currently, the
+        parabola parameters are fixed.
+
+        Parameters
+        ----------
+        batch: number of batches of points
+        simulate_points: generated batches of points from a line space
+
+        Returns
+        -------
+        N/A
+        """
+        a = np.random.uniform(1, 2, size=batch)[:, np.newaxis]
+        parabolas = a * np.power(simulate_points, 2) + (a-1)
+        self.dist_batches = parabolas

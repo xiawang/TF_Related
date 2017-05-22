@@ -6,11 +6,11 @@ from data_utils import *
 height = 100
 width = 100
 nClass = 5
-nSteps=1500
+nSteps = 1500
 
-nFeatures1=16
-nFeatures2=32
-nNeuronsfc=1024
+nFeatures1 = 16
+nFeatures2 = 32
+nNeuronsfc = 1024
 
 # Read in data
 label, image = getImage("data/train-00000-of-00001", height, width, nClass, grayscale=False)
@@ -70,11 +70,11 @@ b_fc2 = bias_variable([nClass])
 y = tf.nn.softmax(tf.matmul(h_fc1_drop, W_fc2) + b_fc2)
 
 # Compute cost
-loss = tf.reduce_mean(-tf.reduce_sum(y_ * tf.log(y), reduction_indices=[1]))
+cost = tf.reduce_mean(-tf.reduce_sum(y_ * tf.log(y), reduction_indices=[1]))
 prediction = tf.equal(tf.argmax(y,1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(prediction, tf.float32))
 optimizer = tf.train.AdamOptimizer(1e-4)
-train_op = optimizer.minimize(loss)
+train_op = optimizer.minimize(cost)
 
 # Initialize TF session
 init_op = tf.group(tf.global_variables_initializer(), tf.local_variables_initializer())
