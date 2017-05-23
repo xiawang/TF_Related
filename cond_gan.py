@@ -23,19 +23,25 @@ plt.show()
 # Initialize data (feed in data during training)
 data = Data()
 
+# Create placeholders
+conb_labels = tf.placeholder(tf.float32, [None, 1])
+
 # Create Generator network
 with tf.variable_scope('Generator'):
     gen_in = tf.placeholder(tf.float32, [None, num_gen_seeds])
-    gen_l1 = tf.layers.dense(gen_in, 128, tf.nn.relu)
+    gen_cond = tf.concat((gen_in, conb_labels), 1)
+    gen_l1 = tf.layers.dense(gen_cond, 128, tf.nn.relu)
     gen_out = tf.layers.dense(gen_l1, num_simu_points)
 
 # Create Discriminator network
 with tf.variable_scope('Discriminator'):
     original_dist = tf.placeholder(tf.float32, [None, num_simu_points])
-    dis_l0 = tf.layers.dense(original_dist, 128, tf.nn.relu, name='l')
+    original_cond = tf.concat((original_dist, conb_labels), 1)
+    dis_l0 = tf.layers.dense(original_cond, 128, tf.nn.relu, name='l')
     prob_origin = tf.layers.dense(dis_l0, 1, tf.nn.sigmoid, name='out')
     # reuse layers for generator
-    dis_l1 = tf.layers.dense(gen_out, 128, tf.nn.relu, name='l', reuse=True)
+    gen_cond = tf.concat((gen_out, conb_labels), 1)
+    dis_l1 = tf.layers.dense(gen_cond, 128, tf.nn.relu, name='l', reuse=True)
     prob_generate = tf.layers.dense(dis_l1, 1, tf.nn.sigmoid, name='out', reuse=True)
 
 # Compute cost and optimization
@@ -60,17 +66,21 @@ for step in range(nSteps):
     # Feed in data
     data.parabola_distribution(batch, simulate_points)
     dist_batches = data.dist_batches
+    bin_labels = data.bin_labels
     G_ideas = np.random.randn(batch, num_gen_seeds)
     G_paintings, pa0, Dl, _, _ = \
-        sess.run([gen_out, prob_origin, dis_cost, dis_train_op, gen_train_op], feed_dict={gen_in: G_ideas, original_dist: dist_batches})
+        sess.run([gen_out, prob_origin, dis_cost, dis_train_op, gen_train_op], \
+            feed_dict={gen_in: G_ideas, original_dist: dist_batches, conb_labels: bin_labels})
 
     if step % 50 == 0:
         plt.cla()
         plt.plot(simulate_points[0], G_paintings[0], c='#4AD631', lw=3, label='Generated painting',)
-        plt.plot(simulate_points[0], 2 * np.power(simulate_points[0], 2) + 1, c='#74BCFF', lw=3, label='upper bound')
-        plt.plot(simulate_points[0], 1 * np.power(simulate_points[0], 2) + 0, c='#FF9359', lw=3, label='lower bound')
+        bound = [0, 0.5] if bin_labels[0, 0] == 0 else [0.5, 1]
+        plt.plot(simulate_points[0], 2 * np.power(simulate_points[0], 2) + bound[1], c='#74BCFF', lw=3, label='upper bound')
+        plt.plot(simulate_points[0], 1 * np.power(simulate_points[0], 2) + bound[0], c='#FF9359', lw=3, label='lower bound')
         plt.text(-.5, 2.3, 'D accuracy=%.2f (0.5 for D to converge)' % pa0.mean(), fontdict={'size': 8})
         plt.text(-.5, 2, 'D score= %.2f (-1.38 for G to converge)' % -Dl, fontdict={'size': 8})
+        plt.text(-.5, 1.7, 'Class = %i' % int(bin_labels[0, 0]), fontdict={'size': 8})
         plt.ylim((0, 3))
         plt.legend(loc='upper right', fontsize=8)
         plt.draw()

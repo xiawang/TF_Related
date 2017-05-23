@@ -6,6 +6,7 @@ class Data:
         self.X = None
         self.Y = None
         self.dist_batches = None
+        self.bin_labels = None
 
     def random_normal(self, size, distance, one_hot=False):
         """ Generate two groups of data points from two Gaussian distributions.
@@ -60,4 +61,7 @@ class Data:
         """
         a = np.random.uniform(1, 2, size=batch)[:, np.newaxis]
         parabolas = a * np.power(simulate_points, 2) + (a-1)
+        bin_labels = (a - 1) > 0.5
+        bin_labels = bin_labels.astype(np.float32)
         self.dist_batches = parabolas
+        self.bin_labels = bin_labels
