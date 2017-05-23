@@ -13,6 +13,14 @@ Note that in both examples, labels are created using **one-hot** encoding.
 (To be completed...)
 
 ### GAN & Conditional GAN
+[**Original TensorFlow Codes by MorvanZhou**](https://github.com/MorvanZhou)
+
+#### Basic Usage (adapted)
+Generative Adversarial Networks (GAN) is used to do unsupervised learning, and is quite different from the neural network used in classification tasks. The Basic structure of a GAN contains a Generator and a Discriminator. Generator starts from some random noises (random values stored in some number of nodes), and goes through some layers of networks, and finally output a distribution (some number of values). While Discriminator will read in both a real distribution and a distribution from the Generator, carry both distributions through some layers of networks, and output two values: probabilities for both distributions to be real. Of course, in the optimizer, both `-(log(prob_real) + log(1-prob_generated))` (become a better discriminator)  and `log(1-prob_generated)` (become a better generator) are minimized.
+
+The Conditional-GAN is very similar to the GAN. The only difference is that an extra tensor (that contains conditional information) is concatenated with the original inputs (in both Generator and Discriminator) and then pushed through the network (e.g. using `tf.concat` function).
+
+#### More Advanced Usage
 (To be completed...)
 
 ### Data Handling
