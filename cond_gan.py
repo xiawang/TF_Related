@@ -67,19 +67,19 @@ for step in range(nSteps):
     data.parabola_distribution(batch, simulate_points)
     dist_batches = data.dist_batches
     bin_labels = data.bin_labels
-    G_ideas = np.random.randn(batch, num_gen_seeds)
-    G_paintings, pa0, Dl, _, _ = \
+    gen_seeds = np.random.randn(batch, num_gen_seeds)
+    gen_dist, prob_o, dis_score, _, _ = \
         sess.run([gen_out, prob_origin, dis_cost, dis_train_op, gen_train_op], \
-            feed_dict={gen_in: G_ideas, original_dist: dist_batches, conb_labels: bin_labels})
+            feed_dict={gen_in: gen_seeds, original_dist: dist_batches, conb_labels: bin_labels})
 
     if step % 50 == 0:
         plt.cla()
-        plt.plot(simulate_points[0], G_paintings[0], c='#4AD631', lw=3, label='Generated painting',)
+        plt.plot(simulate_points[0], gen_dist[0], c='#4AD631', lw=3, label='Generated painting',)
         bound = [0, 0.5] if bin_labels[0, 0] == 0 else [0.5, 1]
         plt.plot(simulate_points[0], 2 * np.power(simulate_points[0], 2) + bound[1], c='#74BCFF', lw=3, label='upper bound')
         plt.plot(simulate_points[0], 1 * np.power(simulate_points[0], 2) + bound[0], c='#FF9359', lw=3, label='lower bound')
-        plt.text(-.5, 2.3, 'D accuracy=%.2f (0.5 for D to converge)' % pa0.mean(), fontdict={'size': 8})
-        plt.text(-.5, 2, 'D score= %.2f (-1.38 for G to converge)' % -Dl, fontdict={'size': 8})
+        plt.text(-.5, 2.3, 'D accuracy=%.2f (0.5 for D to converge)' % prob_o.mean(), fontdict={'size': 8})
+        plt.text(-.5, 2, 'D score= %.2f (-1.38 for G to converge)' % -dis_score, fontdict={'size': 8})
         plt.text(-.5, 1.7, 'Class = %i' % int(bin_labels[0, 0]), fontdict={'size': 8})
         plt.ylim((0, 3))
         plt.legend(loc='upper right', fontsize=8)
