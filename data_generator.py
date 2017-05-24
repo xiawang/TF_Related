@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import random
 
 class Data:
     def __init__(self):
@@ -65,3 +66,57 @@ class Data:
         bin_labels = bin_labels.astype(np.float32)
         self.dist_batches = parabolas
         self.bin_labels = bin_labels
+
+
+class SequenceData:
+    """ Generate sequence of data with dynamic length.
+    This class generate samples for training:
+    - Class 0: linear sequences (i.e. [0, 1, 2, 3,...])
+    - Class 1: random sequences (i.e. [1, 3, 10, 7,...])
+    """
+    def __init__(self, n_samples=1000, max_seq_len=20, min_seq_len=3,
+                 max_value=1000):
+        self.data = []
+        self.labels = []
+        self.seqlen = []
+        for i in range(n_samples):
+            rand_len = random.randint(min_seq_len, max_seq_len)
+            self.seqlen.append(rand_len)
+            if random.random() < .5:
+                # linear sequence
+                rand_start = random.randint(0, max_value - rand_len)
+                s = [[float(i)/max_value] for i in
+                     range(rand_start, rand_start + rand_len)]
+                s += [[0.] for i in range(max_seq_len - rand_len)]
+                self.data.append(s)
+                self.labels.append([1., 0.])
+            else:
+                # random sequence
+                s = [[float(random.randint(0, max_value))/max_value]
+                     for i in range(rand_len)]
+                s += [[0.] for i in range(max_seq_len - rand_len)]
+                self.data.append(s)
+                self.labels.append([0., 1.])
+        self.batch_id = 0
+
+    def next(self, batch_size):
+        """ Return a batch of data. When dataset end is reached, start over.
+
+        Parameters
+        ----------
+        batch_size: length of a batch of data
+
+        Returns
+        -------
+        batch_data: data in the next batch
+        batch_labels: labels in the next batch
+        batch_seqlen: sequence length in the next batch
+        """
+        if self.batch_id == len(self.data):
+            self.batch_id = 0
+        batch_data = (self.data[self.batch_id:min(self.batch_id + batch_size, len(self.data))])
+        batch_labels = (self.labels[self.batch_id:min(self.batch_id + batch_size, len(self.data))])
+        batch_seqlen = (self.seqlen[self.batch_id:min(self.batch_id + batch_size, len(self.data))])
+        self.batch_id = min(self.batch_id + batch_size, len(self.data))
+        return batch_data, batch_labels, batch_seqlen
+
