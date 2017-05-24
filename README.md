@@ -79,3 +79,4 @@ matplotlib
 
 ### Useful Resources
 * [**Deep NLP**](https://github.com/oxford-cs-deepnlp-2017/lectures)
+* [**RNN in TensorFlow**](https://medium.com/@erikhallstrm/hello-world-rnn-83cd7105b767)
