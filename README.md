@@ -76,3 +76,6 @@ tensorflow v1.x
 numpy
 matplotlib
 ```
+
+### Useful Resources
+* [**Deep NLP**](https://github.com/oxford-cs-deepnlp-2017/lectures)
