@@ -82,3 +82,4 @@ matplotlib
 * [**RNN in TensorFlow (Tutorials from Erik Hallström)**](https://medium.com/@erikhallstrm/hello-world-rnn-83cd7105b767)
 * [**TensorFlow Tutorial (Tutorials from Morvan Zhou)**](https://github.com/MorvanZhou/Tensorflow-Tutorial)
 * [**CNN (A Visual Recognition Tutorial by Stanford)**](http://cs231n.github.io/)
+* [**Simple TensorFlow Examples (Examples by Aymeric Damien)**](https://github.com/aymericdamien/TensorFlow-Examples)
