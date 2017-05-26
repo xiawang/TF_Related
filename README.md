@@ -10,6 +10,12 @@ Currently, two examples are provided for general classification problem.
 Note that in both examples, labels are created using **one-hot** encoding.
 
 ### RNN & LSTM
+[**TensorFlow Example for Dynamic RNN by Aymeric Damien**](https://github.com/aymericdamien/TensorFlow-Examples)
+
+#### Basic Usage (adapted)
+RNN (especially LSTM and GRU) is used to do classification and regression for the stream of data. These kinds of neural networks are generally used for speech, text and music classification as well as generation. The reason that these tasks are suited for RNN family is quite clear, since the data can be collected and converted to a sequence of values, in which later values are partially dependent on the previous ones. In my opinion, the RNN family in TensorFlow is the most complicated model to implement. Thus, we will start with an easy sequence classification example that is studied and forked by thousands of people on the github, from Aymeric Damien.
+
+#### More Advanced Usage
 (To be completed...)
 
 ### GAN & Conditional GAN
